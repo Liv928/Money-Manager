@@ -1,10 +1,41 @@
 <template>
     <div class="account-wrap">
-        <head-title :title="'记账：'"></head-title>
-        <div class="go-btn-box">
-            <a href="#/account/consumption" class="go-account go-consumption">消费</a>
-            <a href="#/account/earn" class="go-account go-earn">入账</a>
-        </div>
+        <head-title :title="'Account：'"></head-title>
+        <Tabs>
+            <TabPane label="Consumption">
+                <dl style="line-height: 40px;font-size: 16px;display: flex; align-items: center; flex-wrap: wrap">
+                    <dd v-for="(item, index) in consumption" :key="index" @click="toDetail('consumption', item.name)" style="cursor: pointer; width: 25%; text-align: center">
+                        <img :src="item.icon" class="icon">{{item.name}}
+                    </dd>
+                    <dd style="cursor: pointer; width: 25%; text-align: center">
+                        <img src="../../../assets/images/add.png" @click="modal = true; type = 'consumption'" class="icon">Add
+                    </dd>
+                    <dd style="cursor: pointer; width: 25%; text-align: center">
+                        <img src="../../../assets/images/subtract.png" class="icon" @click="remove('consumption')">Delete
+                    </dd>
+                </dl>
+            </TabPane>
+            <TabPane label="Income">
+                <dl style="line-height: 40px;font-size: 16px;display: flex; align-items: center; flex-wrap: wrap">
+                    <dd v-for="(item, index) in earn" :key="index" @click="toDetail('earn', item.name)" style="cursor: pointer; width: 25%; text-align: center">
+                        <img :src="item.icon" class="icon">{{item.name}}
+                    </dd>
+                    <dd style="cursor: pointer; width: 25%; text-align: center">
+                        <img src="../../../assets/images/add.png" @click="modal = true; type = 'earn'" class="icon">Add
+                    </dd>
+                    <dd style="cursor: pointer; width: 25%; text-align: center">
+                        <img src="../../../assets/images/subtract.png" class="icon" @click="remove('earn')">Delete
+                    </dd>
+                </dl>
+            </TabPane>
+        </Tabs>
+        <Modal
+            v-model="modal"
+            title="New type"
+            @on-ok="save"
+            @on-cancel="cancel">
+            <Input v-model="value" placeholder="Type name"/>
+        </Modal>
     </div>
 </template>
 <script>
@@ -12,21 +43,152 @@
     import headTitle from '../../../components/head-title.vue'
     export default {
         name: 'account_index',
+        data () {
+          return {
+              value: '',
+              type: 'consumption',
+              modal: false,
+              earn: [
+                  {
+                      name: 'Salary',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Living expenses',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Pocket money',
+                      icon: require('../../../assets/images/default.png')
+                  }
+              ],
+              consumption: [
+                  {
+                      name: 'Fruit and snack',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Food',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Travel',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Shopping',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Daliy',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Rent',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Drugs',
+                      icon: require('../../../assets/images/default.png')
+                  },
+                  {
+                      name: 'Transportation',
+                      icon: require('../../../assets/images/default.png')
+                  }
+              ]
+          }
+        },
         created () {
+            let consumption = JSON.parse(sessionStorage.getItem('consumption'))
+            let earn = JSON.parse(sessionStorage.getItem('earn'))
+            console.log(earn)
+            if (consumption && consumption.length > 0) {
+                let arr = consumption.map((item) => {
+                    return {
+                        name: item,
+                        icon: require('../../../assets/images/default.png')
+                    }
+                })
+                this.consumption = arr
+            }
+            if (earn && earn.length > 0) {
+                let arr = earn.map((item) => {
+                    return {
+                        name: item,
+                        icon: require('../../../assets/images/default.png')
+                    }
+                })
+                this.earn = arr
+            }
             this.setNavIndex();
         },
         components: {
             headTitle
         },
         methods: {
+            remove (type) {
+                this.type = type
+                if (this.type === 'consumption') {
+                    this.consumption.pop()
+                    this.setLocalStorage('consumption', this.consumption)
+                } else {
+                    this.earn.pop()
+                    this.setLocalStorage('earn', this.earn)
+                }
+            },
+            setLocalStorage (name, data) {
+                let arr = data.map((item) => {
+                    return item.name
+                })
+                sessionStorage.setItem(name, JSON.stringify(arr))
+                console.log(JSON.parse(sessionStorage.getItem(name)))
+            },
+            save () {
+                if (this.type === 'consumption') {
+                    this.consumption.push({
+                        name: this.value,
+                        icon: require('../../../assets/images/default.png')
+                    })
+                    this.setLocalStorage('consumption', this.consumption)
+                } else {
+                    this.earn.push({
+                        name: this.value,
+                        icon: require('../../../assets/images/default.png')
+                    })
+                    this.setLocalStorage('earn', this.earn)
+                }
+                this.value = ''
+            },
+            cancel () {
+                this.value = ''
+            },
+            toDetail (name, val) {
+              this.$router.push({
+                  name,
+                  query: {
+                      account_type: val
+                  }
+              })
+            },
             setNavIndex () {
                 this.$store.commit(types.SET_NAV_INDEX,'2')
             }
         }
     }
 </script>
-<style lang="scss">
+<style lang="scss" >
     @import "../../../assets/scss/define";
+    .icon{
+        width: 50px;
+        display: block;
+        margin: 0 auto;
+    }
+    .ivu-tabs-nav-wrap {
+        text-align: center;
+    }
+    .ivu-tabs-nav-scroll {
+        display: inline-block;
+    }
     .go-btn-box{
         @extend %pa;
         @extend %tac;
