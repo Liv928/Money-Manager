@@ -1,34 +1,41 @@
 <template>
     <div class="earn-wrap">
-        <head-title :title="'入账：'"></head-title>
+        <head-title :title="'Income：'"></head-title>
         <ul class="input-warp">
             <li class="input-item input-required">
-                <calendar v-model="date_value" title="日期：" disable-future></calendar>
+                <calendar v-model="date_value" title="Date：" disable-future></calendar>
             </li>
             <li class="input-item input-required">
                 <datetime
-                    title="时间："
+                    title="Time："
                     v-model="time_value"
                     format="HH:mm"
-                    confirm-text="完成"
-                    cancel-text="取消">
+                    confirm-text="Finish"
+                    cancel-text="Cancel">
                 </datetime>
             </li>
             <li class="input-item input-required">
                 <popup-picker
-                    title="入账类型："
+                    title="Income type："
                     :data="account_type_arr"
                     v-model="account_type">
                 </popup-picker>
             </li>
             <li class="input-item input-required">
-                <x-input v-model="sum_value" title="金额（￥）：" keyboard="number"></x-input>
+                <x-input v-model="sum_value" title="Money（$）：" keyboard="number"></x-input>
+            </li>
+            <li class="input-item input-required">
+                <popup-picker
+                    title="Mode of payment："
+                    :data="pay_type_arr"
+                    v-model="pay_type">
+                </popup-picker>
             </li>
             <li class="input-item">
-                <x-input v-model="remarks_value" title="备注："></x-input>
+                <x-input v-model="remarks_value" title="Comment："></x-input>
             </li>
         </ul>
-        <i class="sure-btn" @click="subBill()" :class="{'sure-active-true':sum_value}">确认</i>
+        <i class="sure-btn" @click="subBill()" :class="{'sure-active-true':sum_value}">Confirm</i>
     </div>
 </template>
 <script>
@@ -51,8 +58,10 @@
                 is_btn_active: false,
                 sum_value: '',
                 remarks_value: '',
-                account_type_arr: [['基本工资', '公司福利', '其它入账']],
-                account_type:['基本工资'],
+                account_type_arr: [JSON.parse(sessionStorage.getItem('earn'))],
+                account_type:['Salary'],
+                pay_type_arr: [['Cash','Debit card','Credit card']],
+                pay_type:['Cash'],
                 date_value: 'TODAY',
                 time_value: Tool.format('hh:mm')
             }
@@ -64,14 +73,14 @@
             }
         },
         methods: {
-            /**提交账单*/
+            /**submit bills*/
             subBill () {
                 if(!this.sum_value) {
-                    this.showMsg('请填写入账金额');
+                    this.showMsg('Income money');
                     return;
                 }
                 if(isNaN(+this.sum_value)) {
-                    this.showMsg('入账金额错误');
+                    this.showMsg('Error income number');
                     return;
                 }
                 var bill = {
@@ -85,7 +94,7 @@
                     consumption_or_earn: 1
                 };
                 Util.Bill.save(bill);
-                this.showMsg('记账成功');
+                this.showMsg('Done');
                 this.resetValue();
             },
             showMsg (msg) {
@@ -107,13 +116,13 @@
             },
             billTypeNumber ( account_type ) {
                 switch (account_type[0]){
-                    case '基本工资':
+                    case 'Salary':
                         account_type = 'jbgz';
                         break;
-                    case '公司福利':
+                    case 'Living expenses':
                         account_type = 'gsfl';
                         break;
-                    case '其它入账':
+                    case 'Pocket money':
                         account_type = 'qt';
                         break;
                 }

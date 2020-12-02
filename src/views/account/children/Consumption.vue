@@ -1,34 +1,41 @@
 <template>
     <div class="consumption-wrap">
-        <head-title :title="'消费：'"></head-title>
+        <head-title :title="'Consumption：'"></head-title>
         <ul class="input-warp">
             <li class="input-item input-required">
-                <calendar v-model="date_value" title="日期：" disable-future></calendar>
+                <calendar v-model="date_value" title="Date：" disable-future></calendar>
             </li>
             <li class="input-item input-required">
                 <datetime
-                    title="时间："
+                    title="Time："
                     v-model="time_value"
                     format="HH:mm"
-                    confirm-text="完成"
-                    cancel-text="取消">
+                    confirm-text="Finish"
+                    cancel-text="Cancel">
                 </datetime>
             </li>
             <li class="input-item input-required">
                 <popup-picker
-                    title="消费类型："
+                    title="Consumption type："
                     :data="account_type_arr"
                     v-model="account_type">
                 </popup-picker>
             </li>
             <li class="input-item input-required">
-                <x-input v-model="sum_value" title="金额（￥）：" keyboard="number"></x-input>
+                <x-input v-model="sum_value" title="Money（$）：" keyboard="number"></x-input>
+            </li>
+            <li class="input-item input-required">
+                <popup-picker
+                    title="Mode of payment："
+                    :data="pay_type_arr"
+                    v-model="pay_type">
+                </popup-picker>
             </li>
             <li class="input-item">
-                <x-input v-model="remarks_value" title="备注："></x-input>
+                <x-input v-model="remarks_value" title="Comment："></x-input>
             </li>
         </ul>
-        <i class="sure-btn" @click="subBill()" :class="{'sure-active-true':sum_value}">确认</i>
+        <i class="sure-btn" @click="subBill()" :class="{'sure-active-true':sum_value}">Confirm</i>
     </div>
 </template>
 <script>
@@ -57,21 +64,23 @@
                 is_btn_active: false,
                 sum_value: '',
                 remarks_value: '',
-                account_type_arr: [['水果零食','餐饮伙食', '出行旅游', '网上购物', '生活日常', '租房水电', '医疗药物','其它消费']],
-                account_type:['水果零食'],
+                account_type_arr: [JSON.parse(sessionStorage.getItem('consumption'))],
+                account_type:['Fruit and snack'],
+                pay_type_arr: [['Cash', 'Debit card','Credit card']],
+                pay_type:['Cash'],
                 date_value: 'TODAY',
                 time_value: Tool.format('hh:mm')
             }
         },
         methods: {
-            /**提交账单*/
+            /**submit bills*/
             subBill () {
                 if(!this.sum_value) {
-                    this.showMsg('请填写消费金额');
+                    this.showMsg('Sum of consumption');
                     return;
                 }
                 if(isNaN(+this.sum_value)) {
-                    this.showMsg('入账金额错误');
+                    this.showMsg('Error consumption number');
                     return;
                 }
                 var bill = {
@@ -85,7 +94,7 @@
                     consumption_or_earn: 0
                 };
                 Util.Bill.save(bill);
-                this.showMsg('记账成功');
+                this.showMsg('Done');
                 this.resetValue();
             },
             showMsg (msg) {
@@ -107,28 +116,28 @@
             },
             billTypeNumber ( account_type ) {
                 switch (account_type[0]){
-                    case '水果零食':
+                    case 'Fruit and snack':
                         account_type = 'sgls';
                         break;
-                    case '餐饮伙食':
+                    case 'Food':
                         account_type = 'cyhs';
                         break;
-                    case '出行旅游':
+                    case 'Travel':
                         account_type = 'cxly';
                         break;
-                    case '网上购物':
+                    case 'Shopping':
                         account_type = 'wsgw';
                         break;
-                    case '生活日常':
+                    case 'Daliy':
                         account_type = 'shrc';
                         break;
-                    case '租房水电':
+                    case 'Rent':
                         account_type = 'cfsd';
                         break;
-                    case '医疗药物':
+                    case 'Drugs':
                         account_type = 'ylyw';
                         break;
-                    case '其它消费':
+                    case 'Transportation':
                         account_type = 'qt';
                         break;
                 }
