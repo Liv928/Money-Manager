@@ -44,6 +44,7 @@
     import Tool from '../../../assets/lib/Tool'
     import Util from '../../../assets/lib/Util'
     import types from '../../../store/mutation-types'
+    import consumption from '../../account/children/AccountIndex.vue'
     export default {
         name: 'consumption',
         created () {

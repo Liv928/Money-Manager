@@ -12,9 +12,17 @@
                 <span class="bill-sum-title">Consumption: ${{this.consumption_sum}}</span>
                 <span class="bill-sum-title">Earn: ${{this.earn_sum}} </span>
                 <br>
+                <!--
                 <div class="bill-prompt-dp">
-                    <DatePicker type="daterange" size="small" placement="bottom-end" placeholder="Select Bill Range" style="width: 150px"></DatePicker>
+                    <DatePicker type="daterange" 
+                                confirm
+                                placement="bottom-end" 
+                                placeholder="Select Bill Range" 
+                                v-model="bill_range"
+                        
+                                style="width: 150px"></DatePicker>
                 </div>
+                -->
             </div>
            <!--  -->
             
@@ -199,6 +207,7 @@
     export default {
         name: 'bill',
         data () {
+            var nowDate = new Date();
             return {
                 current_month:'',
                 current_year:'',
@@ -215,6 +224,7 @@
                 show_dialog: false,
                 check_value_arr: '',
                 is_btn_active: false,
+                bill_range:nowDate,
                 day_value: '',
                 month_value: '',
                 year_value: '',
@@ -261,54 +271,10 @@
             headTitle
         },
         methods: {
-            /**Get current year and months */
-            addDate() {
-                    var nowDate = new Date();
-                    let date = {
-                        year: nowDate.getFullYear(),
-                        month: nowDate.getMonth() + 1
-                    }
-                    console.log(date);
-                    if (date.month == 12){
-                        this.current_month = 'December';
-                    }
-                    if (date.month == 11){
-                        this.current_month = 'November';
-                    }
-                    if (date.month == 10){
-                        this.current_month = 'October';
-                    }
-                    if (date.month == 9){
-                        this.current_month = 'September';
-                    }
-                    if (date.month == 8){
-                        this.current_month = 'August';
-                    }
-                    if (date.month == 7){
-                        this.current_month = 'July';
-                    }
-                    if (date.month == 6){
-                        this.current_month = 'June';
-                    }
-                    if (date.month == 5){
-                        this.current_month = 'May';
-                    }
-                    if (date.month == 4){
-                        this.current_month = 'April';
-                    }
-                    if (date.month == 3){
-                        this.current_month = 'March';
-                    }
-                    if (date.month == 2){
-                        this.current_month = 'February';
-                    }
-                    if (date.month == 1){
-                        this.current_month = 'January';
-                    }
-
-                    this.current_year = date.year;
-                    
+            updateBill(){
+                console.log('bill r '+bill_range)
             },
+            
             /**过滤账单*/
             filterBill () {
                 var query_condition = {
@@ -414,7 +380,54 @@
                     this.$refs.billScrollEvent.reset();
                     this.$refs.billScrollEvent.donePullup();
                 })
-            }
+            },
+            /**Get current year and months */
+            addDate() {
+                    var nowDate = new Date();
+                    let date = {
+                        year: nowDate.getFullYear(),
+                        month: nowDate.getMonth() + 1
+                    }
+                    console.log(date);
+                    if (date.month == 12){
+                        this.current_month = 'December';
+                    }
+                    if (date.month == 11){
+                        this.current_month = 'November';
+                    }
+                    if (date.month == 10){
+                        this.current_month = 'October';
+                    }
+                    if (date.month == 9){
+                        this.current_month = 'September';
+                    }
+                    if (date.month == 8){
+                        this.current_month = 'August';
+                    }
+                    if (date.month == 7){
+                        this.current_month = 'July';
+                    }
+                    if (date.month == 6){
+                        this.current_month = 'June';
+                    }
+                    if (date.month == 5){
+                        this.current_month = 'May';
+                    }
+                    if (date.month == 4){
+                        this.current_month = 'April';
+                    }
+                    if (date.month == 3){
+                        this.current_month = 'March';
+                    }
+                    if (date.month == 2){
+                        this.current_month = 'February';
+                    }
+                    if (date.month == 1){
+                        this.current_month = 'January';
+                    }
+
+                    this.current_year = date.year; 
+            },
         }
     }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="account-wrap">
-        <head-title :title="'Account：'"></head-title>
+        <head-title :title="'Recorder：'"></head-title>
         <Tabs>
             <TabPane label="Consumption">
                 <dl style="line-height: 40px;font-size: 16px;display: flex; align-items: center; flex-wrap: wrap">

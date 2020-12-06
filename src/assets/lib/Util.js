@@ -49,7 +49,7 @@ const Util = function (win) {
             Tool.dataToLocalStorageOperate.save('cash_bal',cash_bal);
         }
     };
-
+   
     /**
      * 账单
      * */
@@ -59,6 +59,7 @@ const Util = function (win) {
          * */
         query ( query_condition ) {
             var bill_arr = Tool.dataToLocalStorageOperate.achieve('bill_arr') || [];
+            console.log('bill',bill_arr);
             if( query_condition ){
                 var year_value = query_condition.year_value;
                 var month_value = query_condition.month_value;
@@ -161,7 +162,26 @@ const Util = function (win) {
             });
             Tool.dataToLocalStorageOperate.save('bill_arr',bill_arr)
         }
+    },
+    Util.MonthlyConsump= {
+        query () {
+            var bill_arr = Tool.dataToLocalStorageOperate.achieve('bill_arr') || [];
+            var month_arr =[];
+            let i=0;
+            for (i;i<12;i++){
+                month_arr[i]=0;
+            }
+            bill_arr.forEach((item,index) => {
+                if(item.date_value.split('-')[1] == 12){
+                    month_arr[11] +=parseInt(item.sum_value);                 
+                }
+            });
+            
+            return month_arr;
+        },
+        
     };
+
     return Util;
 } (window);
 export default Util;
