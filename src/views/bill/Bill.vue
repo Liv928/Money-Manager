@@ -3,14 +3,28 @@
         <!--主体内容-->
         <div class="container-box"
             :class="{'open-menu': is_open_menu}">
-            <head-title :title="'Bill for '+ current_year+' '+current_month"></head-title>
+            <div class="bill-prompt-wrap">
+                <head-title :title="'Bill'"></head-title>
+                
+                <span class="bill-sum-year">{{this.current_year}}</span>
+                <span class="bill-sum-month">{{this.current_month}}</span>
+                <br>
+                <span class="bill-sum-title">Consumption: ${{this.consumption_sum}}</span>
+                <span class="bill-sum-title">Earn: ${{this.earn_sum}} </span>
+                <br>
+                <div class="bill-prompt-dp">
+                    <DatePicker type="daterange" size="small" placement="bottom-end" placeholder="Select Bill Range" style="width: 150px"></DatePicker>
+                </div>
+            </div>
+           <!--  -->
             
              <svg @click="is_open_menu = !is_open_menu" class="bill-filter">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#filter-icon"></use>
             </svg>
             <!--过滤信息菜单-->
             <div class="filter-menu">
-                <head-title :title="'筛选：'"></head-title>
+                <head-title :title="'Filter：'"></head-title>
+                <!--
                 <ul class="input-warp">
                     <li class="input-item">
                         <datetime
@@ -40,6 +54,7 @@
                         </datetime>
                     </li>
                 </ul>
+                -->
                 <div class="menu-type-wrap">
                     <checker
                         v-model="check_value_arr"
@@ -105,20 +120,13 @@
             </div>
             <!--/过滤信息菜单-->
             <!--账单信息-->
-            <span class="bill-sum-title">Consumption: ${{this.consumption_sum}}</span>
-            <span class="bill-sum-title">Earn: ${{this.earn_sum}} </span>
-            <div class="bill-prompt-wrap">
+            
                 <!--
                 <div class="bill-prompt">
                     <span class="bill-sum-title">Balance: </span>
                     <span class="bill-sum bill-sum-balance" id="balance-sum"></span>
                 </div>
                 -->
-                <div class="bill-prompt">
-                    <DatePicker type="daterange" placement="bottom-end" placeholder="Select Bill Range" style="width: 150px"></DatePicker>
-                </div>
-            
-            </div>
             <div class="bill-wrap">
                 <div class="bill-null-warp" v-show="!bill_arr.length">
                     <svg class="bill-list-null-icon">
@@ -146,7 +154,7 @@
                                 :class="{'earn-type': bill_item.consumption_or_earn == 1,
                                  'consumption-type': bill_item.consumption_or_earn == 0}">
                                 <a :href="bill_item.consumption_or_earn ? '#/account/earn?account_type=' + bill_item.account_type[0] : '#/account/consumption?account_type=' + bill_item.account_type[0]">
-                                    
+                                    <!---->
                                     <svg class="bill-item-type-icon">
                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="'#type-'+ bill_item.billTypeNumber"></use>
                                     </svg>
@@ -262,40 +270,40 @@
                     }
                     console.log(date);
                     if (date.month == 12){
-                        this.current_month = 'Dec';
+                        this.current_month = 'December';
                     }
                     if (date.month == 11){
-                        this.current_month = 'Nov';
+                        this.current_month = 'November';
                     }
                     if (date.month == 10){
-                        this.current_month = 'Oct';
+                        this.current_month = 'October';
                     }
                     if (date.month == 9){
-                        this.current_month = 'Sep';
+                        this.current_month = 'September';
                     }
                     if (date.month == 8){
-                        this.current_month = 'Aug';
+                        this.current_month = 'August';
                     }
                     if (date.month == 7){
-                        this.current_month = 'Jul';
+                        this.current_month = 'July';
                     }
                     if (date.month == 6){
-                        this.current_month = 'Jun';
+                        this.current_month = 'June';
                     }
                     if (date.month == 5){
                         this.current_month = 'May';
                     }
                     if (date.month == 4){
-                        this.current_month = 'Apr';
+                        this.current_month = 'April';
                     }
                     if (date.month == 3){
-                        this.current_month = 'Mar';
+                        this.current_month = 'March';
                     }
                     if (date.month == 2){
-                        this.current_month = 'Feb';
+                        this.current_month = 'February';
                     }
                     if (date.month == 1){
-                        this.current_month = 'Jan';
+                        this.current_month = 'January';
                     }
 
                     this.current_year = date.year;
@@ -503,7 +511,7 @@
         @extend %r0;
         padding: 20px;
         color: #35383a;
-        display:inline;
+       
     }
     .bill-sum-earn{
         color: #F7BA2A;
@@ -532,10 +540,24 @@
         @extend %b0;
         @extend %r0;
         @extend %l0;
-        @extend %df;
-        height: 50px;
+        /*@extend %df;*/
+        height: 140px;
         background-color:#e5ebf1;
-        
+    }
+    .bill-prompt-dp{
+        padding-left: 15px;
+        padding-top: 5px;
+        /*@extend %df;*/
+    }
+    .bill-sum-year{
+        color: #334388af;
+        font-size: 14px;
+        margin-left:20px
+    }
+    .bill-sum-month{
+        color: #334388af;
+        font-size: 14px;
+        margin-left:10px
     }
     .bill-overview{
         height: 40px;
@@ -722,7 +744,7 @@
         &:after{
             @extend %pa;
             @extend %r0;
-            content: '￥';
+            content: '$';
         }
     }
     .bill-item-time{
