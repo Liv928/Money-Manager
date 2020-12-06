@@ -45,7 +45,7 @@ const Util = function (win) {
             return +Tool.dataToLocalStorageOperate.achieve('cash_bal') || 0;
         },
         /**存储可用余额*/
-        save ( cash_balance ) {
+        save ( cash_bal ) {
             Tool.dataToLocalStorageOperate.save('cash_bal',cash_bal);
         }
     };
@@ -114,9 +114,28 @@ const Util = function (win) {
             if ( bill.consumption_or_earn == 0 ){
                 /**消费账单*/
                 Util.TotalBalance.save(+Util.TotalBalance.query() - (+bill.sum_value))
+                if(bill.pay_type=='Debit card'){
+                    Util.DabitBalance.save(+Util.DabitBalance.query()-(+bill.sum_value))
+                }
+                if(bill.pay_type=='Credit card'){
+                    Util.CreditBalance.save(+Util.CreditBalance.query()-(+bill.sum_value))
+                }
+                if(bill.pay_type=='Cash'){
+                    Util.CashBalance.save(+Util.CashBalance.query()-(+bill.sum_value))
+                }
             } else {
                 /**入账账单*/
                 Util.TotalBalance.save(+Util.TotalBalance.query() + (+bill.sum_value))
+                if(bill.pay_type=='Debit card'){
+                    Util.DabitBalance.save(+Util.DabitBalance.query()+(+bill.sum_value))
+                }
+                if(bill.pay_type=='Credit card'){
+                    Util.CreditBalance.save(+Util.CreditBalance.query()+(+bill.sum_value))
+                }
+                if(bill.pay_type=='Cash'){
+                    Util.CashBalance.save(+Util.CashBalance.query()+(+bill.sum_value))
+                }
+
             }
             var bill_arr = Util.Bill.query();
             bill_arr.unshift( bill );

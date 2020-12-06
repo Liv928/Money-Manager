@@ -90,9 +90,11 @@
                     time_value: this.time_value,
                     remarks_value: this.remarks_value,
                     account_type: this.account_type,
+                    pay_type: this.pay_type,
                     billTypeNumber: this.billTypeNumber(this.account_type),
                     consumption_or_earn: 0
                 };
+                console.log("pay type"+this.pay_type);
                 Util.Bill.save(bill);
                 this.showMsg('Done');
                 this.resetValue();
