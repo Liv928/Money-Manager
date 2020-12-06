@@ -14,25 +14,25 @@
                 <svg slot="icon" class="nav-item nav-home-item">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#nav-home"></use>
                 </svg>
-                <span slot="label">首页</span>
+                <span slot="label">Home</span>
             </tabbar-item>
             <tabbar-item :selected="navIndex == 2" link="/account">
                 <svg slot="icon" class="nav-item nav-account-item">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#nav-account"></use>
                 </svg>
-                <span slot="label">记账</span>
+                <span slot="label">Account</span>
             </tabbar-item>
             <tabbar-item :selected="navIndex == 3" link="/bill">
                 <svg slot="icon" class="nav-item nav-bill-item">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#nav-bill"></use>
                 </svg>
-                <span slot="label">账单</span>
+                <span slot="label">Bill</span>
             </tabbar-item>
             <tabbar-item :selected="navIndex == 4" link="/chart">
                 <svg slot="icon" class="nav-item nav-chart-item">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#nav-chart"></use>
                 </svg>
-                <span slot="label">分析</span>
+                <span slot="label">Analysis</span>
             </tabbar-item>
         </tabbar>
         <!--/导航条-->

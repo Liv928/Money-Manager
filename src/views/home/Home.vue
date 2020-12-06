@@ -2,18 +2,53 @@
     <div class="container-view">
         <div class="home-wrap"
             :class="{'home-active': is_open}">
-            <div class="balance-wrap">
-                <svg slot="icon" class="balance-icon">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#type-jbgz"></use>
-                </svg>
-                <h2 class="balance-title">可用余额</h2>
-                <h1 class="balance-total" id="total_balance"></h1>
-            </div>
+            <Tabs>
+                <TabPane label="Property">
+                    <div class="acc-list">
+                        
+                            <List item-layout="vertical" class="overview" header="Accounts Overview" border>
+                                <ListItem class="debit-bal">
+                                    <h2>Debit Card</h2>
+                                    <template slot="extra">
+                                        <li class='bal-value' id="debit_bal"></li>
+                                    </template>
+                                </ListItem>
+                                <ListItem class="credit-bal"><h2>Credit Card</h2>
+                                    <template slot="extra">
+                                        <li class='bal-value' id="credit_bal"></li>
+                                    </template>
+                                </ListItem>
+                                <ListItem class="cash-bal"><h2>Cash</h2>
+                                    <template slot="extra">
+                                        <li class='bal-value' id="cash_bal"></li>
+                                    </template>
+                                </ListItem> 
+                                <ListItem class="total_bal"><h2>Total Assets</h2>
+                                    <template slot="extra">
+                                        <li class='bal-value' id="total_balance"></li>
+                                    </template>
+                                </ListItem>
+                            </List>
+                        
+                    </div>
+                </TabPane>
+                <TabPane label="Owing">
+                    <div class="acc-list">
+                        <List class="overview" header="Owing Overview" border>
+                            <ListItem class="debit-bal"><h2>Debit Card</h2>
+                                <h1 class="balance-total" id="total_balance"></h1>
+                            </ListItem>
+                            <ListItem class="credit-bal"><h2>Lend</h2>
+                                <h1 class="balance-total" id="total_balance"></h1>
+                            </ListItem>
+                            
+                        </List>
+                    </div>
+                </TabPane>
+            </Tabs>
             <div class="home-btn-wrap">
-                <a href="#/account/consumption" class="go-account go-consumption">消费</a>
-                <a href="#/account/earn" class="go-account go-earn">入账</a>
-                <!--<span class="home-btn-item">本月可用余额</span>-->
-                <!--<span class="home-btn-item">实施计划经济</span>-->
+                <a href="#/account/consumption" class="go-account go-consumption">Income</a>
+                <a href="#/account/earn" class="go-account go-earn">Consumption</a>
             </div>
             <svg @click="is_open = true" slot="icon" class="home-arrow" v-show="!is_open">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#nav-arrow"></use>
@@ -32,7 +67,10 @@
         data: function () {
             return {
                 is_open: false,
-                total_balance: 0
+                total_balance: 0,
+                debit_bal:0,
+                credit_bal:0,
+                cash_bal:0,
             }
         },
         components:{
@@ -61,9 +99,17 @@
             /**获取可用余额*/
             fetchBalance () {
                 this.total_balance = Util.TotalBalance.query();
+                this.debit_bal = Util.DabitBalance.query();
+                this.credit_bal = Util.CreditBalance.query();
+                this.cash_bal = Util.CashBalance.query();
+                
                 this.$nextTick(() => {
                     new CountUp("total_balance", 0, this.total_balance, 2, 2).start();
+                    new CountUp("debit_bal",0,this.debit_bal,2,0).start();
+                    new CountUp("credit_bal",0,this.credit_bal,2,0).start();
+                    new CountUp("cash_bal",0,this.cash_bal,2,0).start();
                 })
+                
             },
             /**设置导航条按钮状态*/
             setNavIndex () {
@@ -74,6 +120,31 @@
 </script>
 <style lang="scss">
     @import "../../assets/scss/define";
+    .acc-list{
+        margin: 20px;
+    }
+    .overview{
+        font-size: 16px;
+        font-weight: bold;
+        background-color: rgb(240, 247, 250);
+    }
+    .bal-value{
+        &:before{
+            content: '$ ';
+        }
+    }
+    .total-bal{
+        background-color: rgb(92, 222, 240);
+    }
+    .debit-bal{
+        background-color: rgb(106, 194, 209);
+    }
+    .credit-bal{
+        background-color: rgb(128, 190, 161);
+    }
+    .cash-bal{
+        background-color: rgb(198, 204, 144);
+    }
     .home-active{
         .balance-wrap{
             top: 35%;
@@ -97,35 +168,17 @@
         border: 1px solid rgb(224, 230, 237)
     }
     .balance-title{
-        @extend %pa;
+        /*@extend %pa;*/
         @extend %f12;
         @extend %fwn;
-        @extend %tac;
+        @extend %tar;
         @extend %l0;
         @extend %r0;
-        color: #999;
+        color: rgb(3, 3, 3);
         top: 30%;
     }
     .balance-total{
-        @extend %pa;
-        @extend %fwn;
-        @extend %tac;
-        @extend %l0;
-        @extend %r0;
-        @extend %t50;
-        height: 48px;
-        margin-top: -24px;
-        line-height: 48px;
-        font-size: 24px;
-        color: #58B7FF;
-        &:after{
-            @extend %pa;
-            @extend %f12;
-            @extend %b0;
-            line-height: 42px;
-            content: '(￥)';
-            color: #999;
-        }
+      background-color: rgb(248, 186, 207);
     }
     .balance-icon{
         @extend %pa;

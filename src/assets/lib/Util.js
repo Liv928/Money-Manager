@@ -16,6 +16,37 @@ const Util = function (win) {
         /**存储可用余额*/
         save ( total_balance ) {
             Tool.dataToLocalStorageOperate.save('total_balance',total_balance);
+            console.log("Util save")
+        }
+    };
+    Util.DabitBalance = {
+        /**查询*/
+        query () {
+            return +Tool.dataToLocalStorageOperate.achieve('debit_bal') || 0;
+        },
+        /**存储可用余额*/
+        save ( debit_bal ) {
+            Tool.dataToLocalStorageOperate.save('debit_bal',debit_bal);
+        }
+    };
+    Util.CreditBalance = {
+        /**查询*/
+        query () {
+            return +Tool.dataToLocalStorageOperate.achieve('credit_bal') || 0;
+        },
+        /**存储可用余额*/
+        save ( credit_bal ) {
+            Tool.dataToLocalStorageOperate.save('credit_bal',credit_bal);
+        }
+    };
+    Util.CashBalance = {
+        /**查询*/
+        query () {
+            return +Tool.dataToLocalStorageOperate.achieve('cash_bal') || 0;
+        },
+        /**存储可用余额*/
+        save ( cash_balance ) {
+            Tool.dataToLocalStorageOperate.save('cash_bal',cash_bal);
         }
     };
 
