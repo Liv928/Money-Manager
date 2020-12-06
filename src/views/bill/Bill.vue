@@ -3,8 +3,9 @@
         <!--主体内容-->
         <div class="container-box"
             :class="{'open-menu': is_open_menu}">
-            <head-title :title="'账单：'"></head-title>
-            <svg @click="is_open_menu = !is_open_menu" class="bill-filter">
+            <head-title :title="'Bill for '+ current_year+' '+current_month"></head-title>
+            
+             <svg @click="is_open_menu = !is_open_menu" class="bill-filter">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#filter-icon"></use>
             </svg>
             <!--过滤信息菜单-->
@@ -98,18 +99,32 @@
                     </checker>
                 </div>
                 <div class="menu-btn-wrap">
-                    <i class="menu-btn menu-sure-btn" @click="filterBill()">确定</i>
-                    <i class="menu-btn menu-reset-btn" @click="resetFilter()">重置</i>
+                    <i class="menu-btn menu-sure-btn" @click="filterBill()">Confirm</i>
+                    <i class="menu-btn menu-reset-btn" @click="resetFilter()">Reset</i>
                 </div>
             </div>
             <!--/过滤信息菜单-->
             <!--账单信息-->
+            <span class="bill-sum-title">Consumption: ${{this.consumption_sum}}</span>
+            <span class="bill-sum-title">Earn: ${{this.earn_sum}} </span>
+            <div class="bill-prompt-wrap">
+                <!--
+                <div class="bill-prompt">
+                    <span class="bill-sum-title">Balance: </span>
+                    <span class="bill-sum bill-sum-balance" id="balance-sum"></span>
+                </div>
+                -->
+                <div class="bill-prompt">
+                    <DatePicker type="daterange" placement="bottom-end" placeholder="Select Bill Range" style="width: 150px"></DatePicker>
+                </div>
+            
+            </div>
             <div class="bill-wrap">
                 <div class="bill-null-warp" v-show="!bill_arr.length">
                     <svg class="bill-list-null-icon">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#null-icon"></use>
                     </svg>
-                    <span>没有相关账单</span>
+                    <span>No Bill</span>
                 </div>
                 <!--
                           :use-pulldown="true"
@@ -131,6 +146,7 @@
                                 :class="{'earn-type': bill_item.consumption_or_earn == 1,
                                  'consumption-type': bill_item.consumption_or_earn == 0}">
                                 <a :href="bill_item.consumption_or_earn ? '#/account/earn?account_type=' + bill_item.account_type[0] : '#/account/consumption?account_type=' + bill_item.account_type[0]">
+                                    
                                     <svg class="bill-item-type-icon">
                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="'#type-'+ bill_item.billTypeNumber"></use>
                                     </svg>
@@ -139,39 +155,22 @@
                             <p class="bill-item-con">
                                 <span class="bill-item-remark" v-text="bill_item.remarks_value || bill_item.account_type[0]"></span>
                                 <span class="bill-item-sum" v-text="bill_item.sum_value"></span>
+                    
                             </p>
-                            <p class="bill-item-time">{{bill_item.consumption_or_earn == 1 ? '入账' : '消费'}}时间：{{bill_item.date_value}} {{bill_item.time_value}}</p>
-                            <i class="bill-cancel" @click="confirmRemoveBill(bill_item)">取消</i>
+                            <p class="bill-item-time">{{bill_item.consumption_or_earn == 1 ? 'earn ' : 'consume '}}time：{{bill_item.date_value}} {{bill_item.time_value}}</p>
+                            <i class="bill-cancel" @click="confirmRemoveBill(bill_item)">Delete</i>
                         </li>
                         <li class="bill-item-null"></li>
                     </ul>
                 </scroller>
             </div>
-            <!--/账单信息-->
-            <!--账单信息提示-->
-            <div class="bill-prompt-wrap">
-                <div class="bill-prompt">
-                    <span class="bill-sum-title">入账</span>
-                    <span class="bill-sum bill-sum-earn" id="earn-sum"></span>
-                </div>
-                <i class="bill-reduce"></i>
-                <div class="bill-prompt">
-                    <span class="bill-sum-title">消费</span>
-                    <span class="bill-sum bill-sum-consumption" id="consumption-sum"></span>
-                </div>
-                <i class="bill-equal"></i>
-                <div class="bill-prompt">
-                    <span class="bill-sum-title">余额</span>
-                    <span class="bill-sum bill-sum-balance" id="balance-sum"></span>
-                </div>
-            </div>
-            <!--/账单信息提示-->
+            
         </div>
         <!--/主体内容-->
         <!--弹窗提示-->
         <x-dialog v-model="show_dialog" class="dialog-demo" hide-on-blur>
             <div class="dialog-con">
-                确定移除该条记录？
+                Do you confirm to remove this record?
             </div>
             <span class="bill-dialog-close"  @click="show_dialog = false"></span>
             <div class="bill-dialog-box" @click="removeBill()">
@@ -193,6 +192,8 @@
         name: 'bill',
         data () {
             return {
+                current_month:'',
+                current_year:'',
                 remove_bill: '',
                 data_list: [],
                 formatDemoValue: ['01', '12'],
@@ -201,6 +202,7 @@
                 },
                 earn_sum: 0,
                 consumption_sum: 0,
+                balance_sum: 0,
                 bill_arr: [],
                 show_dialog: false,
                 check_value_arr: '',
@@ -239,6 +241,8 @@
             this.fetchBillArr();
             /**提示信息*/
             this.countSum();
+            /**get date */
+            this.addDate();
         },
         components: {
             Scroller,
@@ -249,6 +253,54 @@
             headTitle
         },
         methods: {
+            /**Get current year and months */
+            addDate() {
+                    var nowDate = new Date();
+                    let date = {
+                        year: nowDate.getFullYear(),
+                        month: nowDate.getMonth() + 1
+                    }
+                    console.log(date);
+                    if (date.month == 12){
+                        this.current_month = 'Dec';
+                    }
+                    if (date.month == 11){
+                        this.current_month = 'Nov';
+                    }
+                    if (date.month == 10){
+                        this.current_month = 'Oct';
+                    }
+                    if (date.month == 9){
+                        this.current_month = 'Sep';
+                    }
+                    if (date.month == 8){
+                        this.current_month = 'Aug';
+                    }
+                    if (date.month == 7){
+                        this.current_month = 'Jul';
+                    }
+                    if (date.month == 6){
+                        this.current_month = 'Jun';
+                    }
+                    if (date.month == 5){
+                        this.current_month = 'May';
+                    }
+                    if (date.month == 4){
+                        this.current_month = 'Apr';
+                    }
+                    if (date.month == 3){
+                        this.current_month = 'Mar';
+                    }
+                    if (date.month == 2){
+                        this.current_month = 'Feb';
+                    }
+                    if (date.month == 1){
+                        this.current_month = 'Jan';
+                    }
+
+                    this.current_year = date.year;
+                    
+            },
             /**过滤账单*/
             filterBill () {
                 var query_condition = {
@@ -338,6 +390,7 @@
                     new CountUp("consumption-sum", consumption_sum, this.consumption_sum, 2, 2).start();
                     new CountUp("balance-sum", (earn_sum-consumption_sum), (this.earn_sum - this.consumption_sum), 2, 2).start();
                 });
+                this.balance_sum = this.earn_sum - this.consumption_sum;
             },
             onScroll (pos) {
                 this.scrollTop = pos.top;
@@ -357,6 +410,7 @@
         }
     }
 </script>
+
 <style lang="scss">
     @import "../../assets/scss/define";
     .menu-type-wrap{
@@ -445,22 +499,23 @@
         margin: 0 4px;
     }
     .bill-sum-title{
-        @extend %pa;
-        @extend %f12;
-        @extend %tac;
+        @extend %f14;
         @extend %r0;
-        @extend %l0;
-        top: 3px;
-        color: #58B7FF;
+        padding: 20px;
+        color: #35383a;
+        display:inline;
     }
     .bill-sum-earn{
         color: #F7BA2A;
+        
     }
     .bill-sum-consumption{
         color: #FF4949;
+        
     }
     .bill-sum-balance{
         color: #13CE66;
+        
     }
     .bill-reduce{
         height: 2px;
@@ -474,24 +529,29 @@
         border-top: 2px solid #58B7FF;
     }
     .bill-prompt-wrap{
-        @extend %pa;
         @extend %b0;
         @extend %r0;
         @extend %l0;
         @extend %df;
+        height: 50px;
+        background-color:#e5ebf1;
+        
+    }
+    .bill-overview{
         height: 40px;
-        background-color: rgba(255,255,255,.8);
+        background-color:#e5ebf1;
     }
     .bill-sum{
         @extend %fwb;
-        line-height: 35px;
+        display:inline；
     }
     .bill-prompt{
-        @extend %df1;
+        /*@extend %df1;*/
         @extend %f16;
-        @extend %tac;
         @extend %pr;
-        padding-top: 10px;
+        display: block;
+        padding: 10px;
+        
     }
     .bill-cancel{
         @extend %pa;
@@ -528,10 +588,10 @@
     }
     .bill-wrap{
         @extend %oya;
-        @extend %pa;
+        @extend %pr;
         @extend %w100;
         @extend %b0;
-        top: 64px;
+        /*top: 4px;*/
     }
     .bill-filter{
         @extend %pa;
@@ -602,6 +662,7 @@
     .menu-reset-btn{
         background-color: #ccc;
     }
+    
     .bill-list{
         margin: 0 10px 20px;
     }
@@ -666,11 +727,11 @@
     }
     .bill-item-time{
         @extend %oh;
-        @extend %tar;
         @extend %f12;
         @extend %c9;
         margin-right: 40px;
         height: 20px;
         line-height: 20px;
+        text-align:left;
     }
 </style>

@@ -33,6 +33,7 @@ const Util = function (win) {
                 var month_value = query_condition.month_value;
                 var day_value = query_condition.day_value;
                 var check_value_arr = query_condition.check_value_arr;
+                
                 if(year_value){
                     var arr = [];
                     bill_arr.forEach((item,index) => {
