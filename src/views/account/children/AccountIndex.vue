@@ -51,45 +51,45 @@
               earn: [
                   {
                       name: 'Salary',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/salary.png')
                   },
                   {
                       name: 'Pocket money',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/pokmoney.png')
                   }
               ],
               consumption: [
                   {
                       name: 'Snack',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/fruit.png')
                   },
                   {
                       name: 'Meal',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/meal.png')
                   },
                   {
                       name: 'Travel',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/travel.png')
                   },
                   {
                       name: 'Shopping',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/shopping.png')
                   },
                   {
                       name: 'Daliy',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/daily.png')
                   },
                   {
                       name: 'Rent and Utilities',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/rent.png')
                   },
                   {
                       name: 'Medicine',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/medicine-1.png')
                   },
                   {
                       name: 'Transportation',
-                      icon: require('../../../assets/images/default.png')
+                      icon: require('../../../assets/images/trans.png')
                   }
               ]
           }
