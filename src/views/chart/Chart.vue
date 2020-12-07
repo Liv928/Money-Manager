@@ -243,13 +243,13 @@
     #line_cons {
         width:360px;
         height:240px;
-        margin-top: 10px auto;
+        margin: 5px auto;
         text-align: center;
     }
     #line_earn {
         width: 360px;
         height: 240px;
-        margin-top: 10px auto;
+        margin: 5px auto;
         text-align: center;
     }
     #pie_cons {
