@@ -54,21 +54,17 @@
                       icon: require('../../../assets/images/default.png')
                   },
                   {
-                      name: 'Living expenses',
-                      icon: require('../../../assets/images/default.png')
-                  },
-                  {
                       name: 'Pocket money',
                       icon: require('../../../assets/images/default.png')
                   }
               ],
               consumption: [
                   {
-                      name: 'Fruit and snack',
+                      name: 'Snack',
                       icon: require('../../../assets/images/default.png')
                   },
                   {
-                      name: 'Food',
+                      name: 'Meal',
                       icon: require('../../../assets/images/default.png')
                   },
                   {
@@ -84,11 +80,11 @@
                       icon: require('../../../assets/images/default.png')
                   },
                   {
-                      name: 'Rent',
+                      name: 'Rent and Utilities',
                       icon: require('../../../assets/images/default.png')
                   },
                   {
-                      name: 'Drugs',
+                      name: 'Medicine',
                       icon: require('../../../assets/images/default.png')
                   },
                   {

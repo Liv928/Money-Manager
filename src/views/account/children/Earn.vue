@@ -26,9 +26,16 @@
             </li>
             <li class="input-item input-required">
                 <popup-picker
-                    title="Mode of payment："
+                    title="Account type："
                     :data="pay_type_arr"
                     v-model="pay_type">
+                </popup-picker>
+            </li>
+            <li class="input-item input-required">
+                <popup-picker
+                    title="frequency："
+                    :data="freq_arr"
+                    v-model="freq_opt">
                 </popup-picker>
             </li>
             <li class="input-item">
@@ -61,7 +68,9 @@
                 account_type_arr: [JSON.parse(sessionStorage.getItem('earn'))],
                 account_type:['Salary'],
                 pay_type_arr: [['Cash','Debit card','Credit card']],
-                pay_type:['Cash'],
+                pay_type:['Debit card'],
+                freq_arr:[['Once','Recurring']],
+                freq_opt:'Once',
                 date_value: 'TODAY',
                 time_value: Tool.format('hh:mm')
             }
@@ -90,6 +99,8 @@
                     time_value: this.time_value,
                     remarks_value: this.remarks_value,
                     account_type: this.account_type,
+                    pay_type: this.pay_type,
+                    freq_opt:this.freq_opt,
                     billTypeNumber: this.billTypeNumber(this.account_type),
                     consumption_or_earn: 1
                 };

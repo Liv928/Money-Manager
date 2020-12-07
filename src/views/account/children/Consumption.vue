@@ -26,9 +26,16 @@
             </li>
             <li class="input-item input-required">
                 <popup-picker
-                    title="Mode of payment："
+                    title="Account type："
                     :data="pay_type_arr"
                     v-model="pay_type">
+                </popup-picker>
+            </li>
+            <li class="input-item input-required">
+                <popup-picker
+                    title="frequency："
+                    :data="freq_arr"
+                    v-model="freq_opt">
                 </popup-picker>
             </li>
             <li class="input-item">
@@ -68,7 +75,9 @@
                 account_type_arr: [JSON.parse(sessionStorage.getItem('consumption'))],
                 account_type:['Fruit and snack'],
                 pay_type_arr: [['Cash', 'Debit card','Credit card']],
-                pay_type:['Cash'],
+                pay_type:['Debit card'],
+                freq_arr:[['Once','Recurring']],
+                freq_opt:['Once'],
                 date_value: 'TODAY',
                 time_value: Tool.format('hh:mm')
             }
@@ -92,10 +101,11 @@
                     remarks_value: this.remarks_value,
                     account_type: this.account_type,
                     pay_type: this.pay_type,
+                    freq_opt:this.freq_opt,
                     billTypeNumber: this.billTypeNumber(this.account_type),
                     consumption_or_earn: 0
                 };
-                console.log("pay type"+this.pay_type);
+                console.log("freq"+this.freq_opt);
                 Util.Bill.save(bill);
                 this.showMsg('Done');
                 this.resetValue();

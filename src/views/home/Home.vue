@@ -5,7 +5,6 @@
             <Tabs>
                 <TabPane label="Property">
                     <div class="acc-list">
-                        
                             <List item-layout="vertical" class="overview" header="Accounts Overview" border size="small">
                                 <ListItem class="debit-bal">
                                     <h2>Debit Card</h2>
@@ -29,17 +28,20 @@
                                     </template>
                                 </ListItem>
                             </List>
-                        
                     </div>
                 </TabPane>
                 <TabPane label="Owing">
                     <div class="acc-list">
-                        <List class="overview" header="Owing Overview" border>
-                            <ListItem class="debit-bal"><h2>Debit Card</h2>
-                                <h1 class="balance-total" id="total_balance"></h1>
+                        <List item-layout="vertical" class="overview" header="Owing Overview" border>
+                            <ListItem class="debit-bal"><h2>Cedit Card</h2>
+                                <template slot="extra">
+                                        <li class='bal-value' id="credit_bal"></li>
+                                    </template>
                             </ListItem>
-                            <ListItem class="credit-bal"><h2>Lend</h2>
-                                <h1 class="balance-total" id="total_balance"></h1>
+                            <ListItem class="credit-bal"><h2>Borrowed</h2>
+                                <template slot="extra">
+                                        <li class='bal-value' id="credit_bal"></li>
+                                </template>
                             </ListItem>
                             
                         </List>
@@ -48,7 +50,7 @@
             </Tabs>
             
             <div class="bdg-card">
-                <Card :bordered="false" style="background-color: rgb(240, 247, 250)">
+                <Card :bordered="false" style="background-color: rgb(205, 228, 236)">
                     <p slot="title">Your Monthly Budget</p>
                     <Button type="primary" @click="modal1 = true">Set Your Budget</Button>
                     <p> {{model1}}</p>
@@ -64,7 +66,7 @@
                                 :parser="value => value.replace(/\$\s?|(,*)/g, '')"></InputNumber>
                     </Modal>    
                     
-                    <p style="margin:10px"> Budget: {{this.budget}} for {{this.current_month}}</p>
+                    <p style="margin-left:6px;margin-top:14px;font-weight:bold;"> Budget: {{this.budget}} for {{this.current_month}}</p>
                 </Card>
             </div>
             <div class="acc-button">
@@ -145,13 +147,14 @@
             },
             initChart(){
                 this.option.series[0].data=this.monthly_arr;
-                console.log(this.monthly_arr);
+                //console.log(this.monthly_arr);
             },
             fetchMonthlyConsump(){
                 this.monthly_arr = Util.MonthlyConsump.query();
             },
             /**获取可用余额*/
             fetchBalance () {
+                
                 this.total_balance = Util.TotalBalance.query();
                 this.debit_bal = Util.DabitBalance.query();
                 this.credit_bal = Util.CreditBalance.query();
@@ -226,7 +229,7 @@
         margin-right: 20px;
         margin-left: 20px;
         margin-top: 10px;
-        background-color: rgb(240, 247, 250) ;
+        background-color: rgb(136, 174, 189) ;
     }
     .acc-button{
         margin-top: 50px;
@@ -243,7 +246,7 @@
     .overview{
         font-size: 16px;
         font-weight: bold;
-        background-color: rgb(240, 247, 250);
+        background-color:rgb(205, 228, 236);
     }
     .bal-value{
         &:before{

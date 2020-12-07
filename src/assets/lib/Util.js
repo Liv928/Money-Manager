@@ -16,7 +16,7 @@ const Util = function (win) {
         /**存储可用余额*/
         save ( total_balance ) {
             Tool.dataToLocalStorageOperate.save('total_balance',total_balance);
-            console.log("Util save")
+            
         }
     };
     Util.DabitBalance = {
@@ -59,7 +59,7 @@ const Util = function (win) {
          * */
         query ( query_condition ) {
             var bill_arr = Tool.dataToLocalStorageOperate.achieve('bill_arr') || [];
-            console.log('bill',bill_arr);
+        
             if( query_condition ){
                 var year_value = query_condition.year_value;
                 var month_value = query_condition.month_value;
@@ -128,13 +128,14 @@ const Util = function (win) {
                 /**入账账单*/
                 Util.TotalBalance.save(+Util.TotalBalance.query() + (+bill.sum_value))
                 if(bill.pay_type=='Debit card'){
-                    Util.DabitBalance.save(+Util.DabitBalance.query()+(+bill.sum_value))
+                    console.log('debit bal ',(+Util.TotalBalance.query() + (+bill.sum_value)))
+                    Util.DabitBalance.save(+Util.DabitBalance.query() + (+bill.sum_value))
                 }
                 if(bill.pay_type=='Credit card'){
-                    Util.CreditBalance.save(+Util.CreditBalance.query()+(+bill.sum_value))
+                    Util.CreditBalance.save(+Util.CreditBalance.query() + (+bill.sum_value))
                 }
                 if(bill.pay_type=='Cash'){
-                    Util.CashBalance.save(+Util.CashBalance.query()+(+bill.sum_value))
+                    Util.CashBalance.save(+Util.CashBalance.query()+ (+bill.sum_value))
                 }
 
             }
@@ -153,9 +154,27 @@ const Util = function (win) {
                     if ( bill.consumption_or_earn == 0 ){
                         /**消费账单*/
                         Util.TotalBalance.save(+Util.TotalBalance.query() + (+bill.sum_value))
+                        if(bill.pay_type=='Debit card'){
+                            Util.DabitBalance.save(+Util.DabitBalance.query()+(+bill.sum_value))
+                        }
+                        if(bill.pay_type=='Credit card'){
+                            Util.CreditBalance.save(+Util.CreditBalance.query()+(+bill.sum_value))
+                        }
+                        if(bill.pay_type=='Cash'){
+                            Util.CashBalance.save(+Util.CashBalance.query()+(+bill.sum_value))
+                        }
                     } else {
                         /**入账账单*/
                         Util.TotalBalance.save(+Util.TotalBalance.query() - (+bill.sum_value))
+                        if(bill.pay_type=='Debit card'){
+                            Util.DabitBalance.save(+Util.DabitBalance.query()-(+bill.sum_value))
+                        }
+                        if(bill.pay_type=='Credit card'){
+                            Util.CreditBalance.save(+Util.CreditBalance.query()-(+bill.sum_value))
+                        }
+                        if(bill.pay_type=='Cash'){
+                            Util.CashBalance.save(+Util.CashBalance.query()-(+bill.sum_value))
+                        }
                     }
                     return;
                 }
@@ -164,20 +183,37 @@ const Util = function (win) {
         }
     },
     Util.MonthlyConsump= {
-        query () {
-            var bill_arr = Tool.dataToLocalStorageOperate.achieve('bill_arr') || [];
-            var month_arr =[];
+        query_consump () {
+            var bill_arr = Util.Bill.query();
+            var month_arr_consump =[];
             let i=0;
             for (i;i<12;i++){
-                month_arr[i]=0;
+                month_arr_consump[i]=0;
             }
             bill_arr.forEach((item,index) => {
                 if(item.date_value.split('-')[1] == 12){
-                    month_arr[11] +=parseInt(item.sum_value);                 
+                    if(item.consumption_or_earn==0){
+                        month_arr_consump[11] +=parseInt(item.sum_value);    
+                    }            
                 }
             });
-            
-            return month_arr;
+            return month_arr_consump;
+        },
+        query_earn () {
+            var bill_arr = Util.Bill.query();
+            var month_arr_earn=[];
+            let i=0;
+            for (i;i<12;i++){
+                month_arr_earn[i]=0;
+            }
+            bill_arr.forEach((item,index) => {
+                if(item.date_value.split('-')[1] == 12){
+                    if(item.consumption_or_earn==1){
+                        month_arr_earn[11] +=parseInt(item.sum_value);    
+                    }            
+                }
+            });
+            return month_arr_earn;
         },
         
     };

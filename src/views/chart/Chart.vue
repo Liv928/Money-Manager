@@ -1,13 +1,20 @@
 <template>
     <div class="container-view">
-        <head-title :title="'分析：'"></head-title>
-        <div class="chart-wrap">
-            <scroller lock-x
-                      height="-118"
-                      :scrollbarY="true"
-                      @on-scroll="onScroll"
-                      ref="chartScrollEvent">
-                <div class="chart-con">
+        <head-title :title="'Analysis：'"></head-title>
+             <Tabs>
+                <TabPane label="Expenses">
+                    <div id="app">
+                        <x-chart :id="id_1" :option="option_1"></x-chart>
+                    </div>
+                </TabPane>
+                <TabPane label="Income">
+                    <div id="app">
+                        <x-chart :id="id_2" :option="option_2"></x-chart>
+                    </div>
+                </TabPane>
+             </Tabs>
+           
+               <!--
                     <div class="chart-item">
                         <h2 class="chart-title">消费状况：</h2>
                         <canvas id="consumption-chart" width="400" height="400"></canvas>
@@ -16,9 +23,9 @@
                         <h2 class="chart-title">入账状况：</h2>
                         <canvas id="earn-chart" width="400" height="400"></canvas>
                     </div>
-                </div>
-            </scroller>
-        </div>
+                --->
+            
+        
     </div>
 </template>
 <script>
@@ -26,21 +33,34 @@
     import headTitle from '../../components/head-title.vue'
     import Util from '../../assets/lib/Util'
     import { Scroller } from 'vux'
+    import XChart from '../../components/chart.vue'
+    import options from '../../assets/chart-option/chart-options.js'
     export default {
         name: 'chart',
         data () {
+            let option_line_1 = options.line_consump;
+            let option_line_2 = options.line_earn;
             return {
+                id_1:'line_cons',
+                id_2:'line_earn',
+                option_1: option_line_1,
+                option_2:option_line_2,
+                month_arr_consump:[],
+                month_arr_earn:[],
                 consumption_chart_arr: [0,0,0,0,0,0,0,0],
                 earn_chart_arr: [0,0,0]
             }
         },
         components: {
             Scroller,
-            headTitle
+            headTitle,
+            XChart
         },
         created () {
             this.$store.commit(types.SET_NAV_INDEX,'4');
             this.fetchBillData();
+            this.fetchMonthlyConsump();
+            this.initChart();
             this.$nextTick(() => {
                 var consumption_data = {
                     labels: [
@@ -95,6 +115,16 @@
             })
         },
         methods: {
+            initChart(){
+                this.option_1.series[0].data=this.month_arr_consump;
+                this.option_2.series[0].data=this.month_arr_earn;
+                //console.log(this.monthly_arr);
+            },
+            fetchMonthlyConsump(){
+                this.month_arr_consump = Util.MonthlyConsump.query_consump();
+                this.month_arr_earn = Util.MonthlyConsump.query_earn();
+                console.log('fetch '+ this.month_arr_earn)
+            },
             onScroll (pos) {
                 this.scrollTop = pos.top;
             },
