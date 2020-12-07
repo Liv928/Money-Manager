@@ -73,7 +73,7 @@
                 sum_value: '',
                 remarks_value: '',
                 account_type_arr: [JSON.parse(sessionStorage.getItem('consumption'))],
-                account_type:['Fruit and snack'],
+                account_type:['Snack'],
                 pay_type_arr: [['Cash', 'Debit card','Credit card']],
                 pay_type:['Debit card'],
                 freq_arr:[['Once','Recurring']],
@@ -105,7 +105,7 @@
                     billTypeNumber: this.billTypeNumber(this.account_type),
                     consumption_or_earn: 0
                 };
-                console.log("freq"+this.freq_opt);
+                //console.log("acc_t "+this.account_type);
                 Util.Bill.save(bill);
                 this.showMsg('Done');
                 this.resetValue();
@@ -129,10 +129,10 @@
             },
             billTypeNumber ( account_type ) {
                 switch (account_type[0]){
-                    case 'Fruit and snack':
+                    case 'Snack':
                         account_type = 'sgls';
                         break;
-                    case 'Food':
+                    case 'Meal':
                         account_type = 'cyhs';
                         break;
                     case 'Travel':
@@ -144,10 +144,10 @@
                     case 'Daliy':
                         account_type = 'shrc';
                         break;
-                    case 'Rent':
+                    case 'Rent and Utilities':
                         account_type = 'cfsd';
                         break;
-                    case 'Drugs':
+                    case 'Medicine':
                         account_type = 'ylyw';
                         break;
                     case 'Transportation':

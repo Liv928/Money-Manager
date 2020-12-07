@@ -130,9 +130,6 @@
                     case 'Salary':
                         account_type = 'jbgz';
                         break;
-                    case 'Living expenses':
-                        account_type = 'gsfl';
-                        break;
                     case 'Pocket money':
                         account_type = 'qt';
                         break;
