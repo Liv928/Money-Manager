@@ -12,17 +12,18 @@
                 <span class="bill-sum-title">Consumption: ${{this.consumption_sum}}</span>
                 <span class="bill-sum-title">Earn: ${{this.earn_sum}} </span>
                 <br>
-                <!--
-                <div class="bill-prompt-dp">
-                    <DatePicker type="daterange" 
-                                confirm
-                                placement="bottom-end" 
-                                placeholder="Select Bill Range" 
+                <DatePicker type="month" 
+                                placeholder="Select month" 
                                 v-model="bill_range"
-                        
-                                style="width: 150px"></DatePicker>
+                                style="width: 150px;margin-left:15px;margin-top:8px"
+                                confirm
+                                @on-clear="handleClear"
+                                @on-ok="rangeBill">
+                </DatePicker>
+                <div class="bill-prompt-dp">
+                    
                 </div>
-                -->
+                
             </div>
            <!--  -->
             
@@ -224,7 +225,7 @@
                 show_dialog: false,
                 check_value_arr: '',
                 is_btn_active: false,
-                bill_range:nowDate,
+                bill_range:'',
                 day_value: '',
                 month_value: '',
                 year_value: '',
@@ -271,10 +272,15 @@
             headTitle
         },
         methods: {
+            handleClear(){
+
+            },
             updateBill(){
                 console.log('bill r '+bill_range)
             },
-            
+            rangeBill(){
+                console.log('ran ',this.bill_range)
+            },
             /**过滤账单*/
             filterBill () {
                 var query_condition = {
@@ -425,7 +431,6 @@
                     if (date.month == 1){
                         this.current_month = 'January';
                     }
-
                     this.current_year = date.year; 
             },
         }
@@ -554,7 +559,7 @@
         @extend %r0;
         @extend %l0;
         /*@extend %df;*/
-        height: 140px;
+        height: 155px;
         background-color:#e5ebf1;
     }
     .bill-prompt-dp{
@@ -563,13 +568,13 @@
         /*@extend %df;*/
     }
     .bill-sum-year{
-        color: #334388af;
-        font-size: 14px;
+        color: #5284b3af;
+        font-size: 16px;
         margin-left:20px
     }
     .bill-sum-month{
-        color: #334388af;
-        font-size: 14px;
+        color: #5284b3af;
+        font-size: 16px;
         margin-left:10px
     }
     .bill-overview{
