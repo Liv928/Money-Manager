@@ -2,7 +2,7 @@
     <div class="container-view">
         <head-title :title="'Analysis：'"></head-title>
              <Tabs>
-                <TabPane label="Expenses">
+                <TabPane label="Expense">
                     <Row>
                         <p slot="title">Your Monthly Consumption Trend</p>
                         <div id="app">

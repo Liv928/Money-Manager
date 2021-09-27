@@ -33,7 +33,7 @@
             </li>
             <li class="input-item input-required">
                 <popup-picker
-                    title="frequency："
+                    title="Frequency："
                     :data="freq_arr"
                     v-model="freq_opt">
                 </popup-picker>

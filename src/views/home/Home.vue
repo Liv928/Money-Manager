@@ -69,6 +69,7 @@
                     <p style="margin-left:6px;margin-top:14px;font-weight:bold;"> Budget: {{this.budget}} for {{this.current_month}}</p>
                 </Card>
             </div>
+            
             <div class="acc-button">
                 <Button to="/account/" type="primary" size="large" shape="circle">Let's start your recorder!</Button>
             </div>

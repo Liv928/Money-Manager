@@ -2,7 +2,7 @@
     <div class="account-wrap">
         <head-title :title="'Recorder：'"></head-title>
         <Tabs>
-            <TabPane label="Consumption">
+            <TabPane label="Expense">
                 <dl style="line-height: 40px;font-size: 16px;display: flex; align-items: center; flex-wrap: wrap">
                     <dd v-for="(item, index) in consumption" :key="index" @click="toDetail('consumption', item.name)" style="cursor: pointer; width: 25%; text-align: center">
                         <img :src="item.icon" class="icon">{{item.name}}
